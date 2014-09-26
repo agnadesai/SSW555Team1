@@ -27,7 +27,7 @@ public class TestCases {
 		assertTrue( ProblemFinder.isBirthDateAfterDeathDate(i1) );
 		assertTrue( !ProblemFinder.isBirthDateAfterDeathDate(i2) );
 	}
-	
+	@Test
 	public void testMarriageToDeadPerson()
 	{
 		Hashtable<String, Family> familyIndex = new Hashtable<String, Family>();
