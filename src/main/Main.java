@@ -1,4 +1,6 @@
 package main;
+
+import gedcom.GEDCOMAnomaly;
 import gedcom.GEDCOMError;
 import gedcom.GEDCOMParser;
 
@@ -107,12 +109,19 @@ public class Main
 				outputText += "Id:\t\t" + family.getId() + "\n";
 				outputText += "Husband Name:\t" + family.getHusband().getName() + "\n";
 				outputText += "Wife Name:\t" + family.getWife().getName() + "\n";
-				outputText += "Child Name:\t" + family.getChild().getName() + "\n\n";
+		//		outputText += "Child Name:\t" + family.getChild().getName() + "\n\n";
+				
+				
 			}
+			
+			
+			
+			gParser.getAnomalies(gParser);
 			
 			LinkedList<GEDCOMError> errors = gParser.getErrors();
 			
 			outputText += "\nErrors - \n";
+			
 			
 			if(errors.size() == 0)
 			{
@@ -125,6 +134,24 @@ public class Main
 					outputText += (i+1) + ". " + errors.get(i).getMessage() + "\n";
 				}
 			}
+			
+			LinkedList<GEDCOMAnomaly> anomalies = gParser.getAnomalies();
+			
+			outputText += "\nAnomalies - \n";
+			
+			
+			if(errors.size() == 0)
+			{
+				outputText += "None found";
+			}
+			else
+			{
+				for(int i = 0; i < anomalies.size(); i++)
+				{
+					outputText += (i+1) + ". " + anomalies.get(i).getMessage() + "\n";
+				}
+			}
+			
 			
 			System.out.print(outputText);
 			
@@ -141,8 +168,23 @@ public class Main
 		{
 			e.printStackTrace();
 		}
+		
+	/*	GEDCOMParser gParser;
+		try {
+			gParser = new GEDCOMParser (mInputFile);
+		
+		for(Map.Entry<String, Family> entry : gParser.getFamilies().entrySet())
+		{
+			Family fam = entry.getValue();
+		
+		FindErrorAnomaly fn = new FindErrorAnomaly();
+			fn.morethanonespouse(fam.getHusband(), fam);
+		}
+		} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		}*/
 	}
-	
 	private static void usage () {
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.printHelp( "GEDCOMParser", mOptions );

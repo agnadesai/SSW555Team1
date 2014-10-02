@@ -164,6 +164,7 @@ public class IndividualTest {
 			Individual i = new Individual(INDIVIDUAL_ID);
 			i.setBirthday(d);
 			i.setDeath(cal.getTime());
+			
 
 			fail("Setting the date of an individual to a date before birthday did not throw an exception when it should have");
 		}

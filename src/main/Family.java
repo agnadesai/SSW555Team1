@@ -38,6 +38,8 @@ public class Family
 	public void setMarried(Date married)
 	{
 		Married = married;
+		
+				
 	}
 
 	public Individual getHusband()
@@ -57,6 +59,10 @@ public class Family
 		{
 			throw new IllegalArgumentException("Husband with id " + husband.getId() + " is dead and may not be married in family with id " + this.getId());
 		}
+		
+		
+		System.out.println("husband more than once married = " +husband.getSpouseOfFamilyIDs());
+		
 	}
 
 	public Individual getWife()
