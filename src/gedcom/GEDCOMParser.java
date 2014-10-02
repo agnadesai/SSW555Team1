@@ -263,7 +263,7 @@ public class GEDCOMParser {
 			boolean tf = fn.hasmorethanonespouse(i, fam,i.get(s)) ;
 			// System.out.println("tf =" +tf);
 			if(tf == true) {
-				anomalies.add(new GEDCOMAnomaly("Anomaly - " + i.get(s).getName() + " married more than once"));
+				anomalies.add(new GEDCOMAnomaly("Anomaly - " + i.get(s).getName() + " married more than once at the same time"));
 				
 			}
 		
