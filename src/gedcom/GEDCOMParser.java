@@ -14,15 +14,35 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 import main.Family;
+import main.FindErrorAnomaly;
 import main.Individual;
 
 public class GEDCOMParser {
 	
+
+	static final int flags = Pattern.CASE_INSENSITIVE | Pattern.MULTILINE;
+	static final String validTags = "INDI|NAME|SEX|BIRT|DEAT|" +
+						"FAMC|FAMS|FAM|MARR|HUSB|WIFE|" +
+					    "CHIL|DIV|DATE|TRLR|NOTE";
+	
+	//static final Pattern tagPattern = Pattern.compile( "([\\w|\\@]+)", flags);
+	static final Pattern linePattern = Pattern.compile ("(\\s?\\d\\s[\\w|\\@]+\\s*)", flags);
+	static final Pattern levelNumPattern = Pattern.compile("^\\s?(\\d)\\s*");
+	static final Pattern tagPattern = Pattern.compile("\\s?\\d\\s([\\w|\\@]+)\\s*");
+	static final Pattern validTagPattern = Pattern.compile("\\s?\\d\\s(" + validTags + ")\\s*");
+	static final Pattern argPattern = Pattern.compile("\\s?\\d\\s[\\w|\\@]+\\s+(.*)");
+		
+
 	TreeMap<String, Individual> individuals = new TreeMap<String, Individual>();
 	TreeMap<String, Family> families = new TreeMap<String, Family>();
 	List<GEDCOMError> errors = new LinkedList<GEDCOMError>();
+	List<GEDCOMAnomaly> anomalies = new LinkedList<GEDCOMAnomaly>();
+	
 	
 	public GEDCOMParser ()
 	{
@@ -44,6 +64,8 @@ public class GEDCOMParser {
 		ParseBuffer (brBufferedReader);
 		
 	}
+	
+
 	
 	public void ParseBuffer (BufferedReader br) throws IOException {
 		
@@ -211,6 +233,7 @@ public class GEDCOMParser {
 		}
 	}
 	
+
 	public TreeMap<String, Individual> getIndividuals () {
 		return individuals;
 	}
@@ -222,5 +245,29 @@ public class GEDCOMParser {
 	public LinkedList<GEDCOMError> getErrors()
 	{
 		return (LinkedList<GEDCOMError>) errors;
+	}
+	public LinkedList<GEDCOMAnomaly> getAnomalies()
+	{
+		return (LinkedList<GEDCOMAnomaly>) anomalies;
+	}
+	
+
+	
+	public void getAnomalies(GEDCOMParser gp) {
+		
+		TreeMap<String, Individual> i =gp.getIndividuals();
+		TreeMap<String, Family> fam = gp.getFamilies();
+		FindErrorAnomaly fn = new FindErrorAnomaly();
+		
+		for ( String s : i.keySet()) {
+			boolean tf = fn.hasmorethanonespouse(i, fam,i.get(s)) ;
+			// System.out.println("tf =" +tf);
+			if(tf == true) {
+				anomalies.add(new GEDCOMAnomaly("Anomaly - " + i.get(s).getName() + " married more than once"));
+				
+			}
+		
+		}
+		
 	}
 }
